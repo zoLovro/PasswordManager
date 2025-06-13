@@ -1,23 +1,21 @@
 package com.roburo.passwordmanager;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
-import java.security.MessageDigest;
 
 public class LoginController {
     @FXML private TextField usernameField;
@@ -37,18 +35,15 @@ public class LoginController {
         Path path = Paths.get(System.getProperty("user.home"), "users.txt");
 
         try {
-            List<String> lines = Files.readAllLines(path);
-            for (String line : lines) {
+            for (String line : Files.readAllLines(path)) {
                 String[] parts = line.split(":");
                 if (parts.length != 2) continue;
-                String fileUser = parts[0];
-                String fileHash = parts[1];
+                if (parts[0].equals(username) && parts[1].equals(hashedInput)) {
+                    // store RAW password + username in Session
+                    Session.setCurrentUsername(username);
+                    Session.setEncryptionKey( deriveAESKey(password) );
 
-                if (fileUser.equals(username) && fileHash.equals(hashedInput)) {
-                    loadMainScreen(username, password); // pass raw password, NOT hashedInput
-                    PasswordsController.Session.setEncryptionKey(deriveAESKey(password));
-                    PasswordsController.Session.setCurrentUsername(username);
-
+                    loadMainScreen();      // <— no args now
                     return;
                 }
             }
@@ -63,39 +58,27 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("registerView.fxml"));
             Parent root = loader.load();
-
-            // Get the current stage
             Stage stage = (Stage) usernameField.getScene().getWindow();
-
-            // Set the new scene
             stage.setScene(new Scene(root));
             stage.setTitle("Password Manager - Register");
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadMainScreen(String username, String hashedInput) {
+    private void loadMainScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mainView.fxml"));
-            Scene scene = new Scene(loader.load());
-
-            // Pass username and key to the controller
-            ApplicationController controller = loader.getController();
-            controller.setUserCredentials(username, hashedInput);
-
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(scene);
+            stage.setScene(new Scene(loader.load()));
+            stage.setTitle("Password Manager");
         } catch (IOException e) {
             showAlert("Error loading main screen.");
         }
     }
 
-
     private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, message);
-        alert.showAndWait();
+        new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
 
     public static String hashPassword(String password) {
@@ -103,9 +86,7 @@ public class LoginController {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
+            for (byte b : hashedBytes) sb.append(String.format("%02x", b));
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 not available", e);
@@ -116,12 +97,9 @@ public class LoginController {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(masterPassword.getBytes(StandardCharsets.UTF_8));
-            // Convert first 16 bytes to a hex string (or use raw bytes in SecretKeySpec)
-            byte[] keyBytes = Arrays.copyOf(hash, 16);
-            return new String(keyBytes, StandardCharsets.ISO_8859_1); // Using ISO_8859_1 to keep bytes unchanged
+            return new String(Arrays.copyOf(hash, 16), StandardCharsets.ISO_8859_1);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

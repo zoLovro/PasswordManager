@@ -20,16 +20,22 @@
       </font>
    </Label>
 
+   <!-- New Site field -->
+   <TextField fx:id="siteField"
+              promptText="Site / Application"
+              style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"
+              prefWidth="300"/>
+
    <TextField fx:id="usernameField"
               promptText="Username / E-mail"
-              style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"/>
+              style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"
+              prefWidth="300"/>
 
    <HBox spacing="10">
       <TextField fx:id="lengthField"
                  promptText="Length"
                  style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"
                  prefWidth="80"/>
-
       <Button text="Generate"
               onAction="#onGenerateClick"
               style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
@@ -41,7 +47,6 @@
                  promptText="Generated Password"
                  style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: #ffffff;"
                  prefWidth="300"/>
-
       <Button text="Copy"
               onAction="#onCopyClick"
               style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
@@ -51,7 +56,6 @@
            onAction="#onSaveClick"
            style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20;" />
 
-   <!-- New Button: View Passwords -->
    <Button text="View Passwords"
            onAction="#onPasswordsClick"
            style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20;" />

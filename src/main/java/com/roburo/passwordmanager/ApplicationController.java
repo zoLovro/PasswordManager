@@ -1,95 +1,73 @@
 package com.roburo.passwordmanager;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.roburo.passwordmanager.LoginController.deriveAESKey;
-
 public class ApplicationController {
+    @FXML private TextField siteField;
     @FXML private TextField usernameField;
     @FXML private TextField passwordField;
     @FXML private TextField lengthField;
-    private String currentUsername;
-    private String encryptionKey;
 
     private final PasswordLogic passwordManager = new PasswordLogic();
 
-    public void setUserCredentials(String username, String rawPassword) {
-        this.currentUsername = username;
-        this.encryptionKey = deriveAESKey(rawPassword);
-    }
+    /** Remove setUserCredentials entirely—Session holds those now */
 
     @FXML
     protected void onGenerateClick() {
-        int length;
-        try {
-            length = Integer.parseInt(lengthField.getText());
-        } catch (NumberFormatException e) {
-            length = 12; // fallback
-        }
-
-        String password = passwordManager.generatePassword(length);
-        passwordField.setText(password);
+        int length = 12;
+        try { length = Integer.parseInt(lengthField.getText()); }
+        catch (NumberFormatException ignored) {}
+        passwordField.setText(passwordManager.generatePassword(length));
     }
 
     @FXML
     protected void onCopyClick() {
-        String password = passwordField.getText();
-        if (password == null || password.isEmpty()) return;
-
-        Clipboard clipboard = Clipboard.getSystemClipboard();
-        ClipboardContent content = new ClipboardContent();
-        content.putString(password);
-        clipboard.setContent(content);
+        String pwd = passwordField.getText();
+        if (pwd == null || pwd.isEmpty()) return;
+        ClipboardContent cc = new ClipboardContent();
+        cc.putString(pwd);
+        Clipboard.getSystemClipboard().setContent(cc);
     }
-
 
     @FXML
     protected void onSaveClick() throws IOException {
-        if (encryptionKey == null || currentUsername == null) {
+        String currentUser = Session.getCurrentUsername();
+        String key = Session.getEncryptionKey();
+        if (currentUser == null || key == null) {
             showError("User not authenticated.");
             return;
         }
 
-        String password = passwordField.getText();
-        if (password == null || password.isEmpty()) return;
+        String site = siteField.getText();
+        String serviceUser = usernameField.getText();
+        String pwd = passwordField.getText();
+        if (site.isEmpty() || serviceUser.isEmpty() || pwd.isEmpty()) return;
 
-        String encryptedPassword = EncryptionUtils.encrypt(password, encryptionKey);
-        String serviceUsername = usernameField.getText();
-        if (serviceUsername == null || serviceUsername.isEmpty()) return;
+        String encrypted = EncryptionUtils.encrypt(pwd, key);
+        Path dir = Paths.get(System.getProperty("user.home"), ".passwordmanager");
+        Files.createDirectories(dir);
+        Path file = dir.resolve(currentUser + ".enc");
 
-        Path path = Paths.get(System.getProperty("user.home"), ".passwordmanager", currentUsername + ".enc");
-        Files.createDirectories(path.getParent());
-        String line = serviceUsername + " : " + encryptedPassword;
+        String line = site + " : " + serviceUser + " : " + encrypted;
+        Files.write(file, List.of(line),
+                StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 
-        try {
-            Files.write(path, List.of(line), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            showInfo("Credentials saved!");
-        } catch (IOException e) {
-            showError("Error saving credentials: " + e.getMessage());
-        }
-    }
-    private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
-        alert.showAndWait();
-    }
-    private void showError(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-        alert.showAndWait();
+        showInfo("Saved!");
     }
 
     @FXML
@@ -97,29 +75,18 @@ public class ApplicationController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("passwordsView.fxml"));
             Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-
-            // Set the new scene
+            Stage stage = (Stage) siteField.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Password Manager - Passwords");
-            stage.show();
+            stage.setTitle("Passwords");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private String deriveAESKey(String masterPassword) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(masterPassword.getBytes(StandardCharsets.UTF_8));
-            byte[] keyBytes = Arrays.copyOf(hash, 16);
-            return new String(keyBytes, StandardCharsets.ISO_8859_1);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private void showInfo(String m) {
+        new Alert(Alert.AlertType.INFORMATION, m).showAndWait();
     }
-
-
+    private void showError(String m) {
+        new Alert(Alert.AlertType.ERROR, m).showAndWait();
+    }
 }
