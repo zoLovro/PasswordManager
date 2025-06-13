@@ -1,22 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="384.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.roburo.passwordmanager.ApplicationController">
-   <children>
+<VBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.roburo.passwordmanager.ApplicationController"
+      alignment="CENTER"
+      spacing="15"
+      prefWidth="500"
+      prefHeight="400"
+      style="-fx-background-color: #f0f4f8; -fx-padding: 40;">
 
-      <Button layoutX="257.0" layoutY="226.0" mnemonicParsing="false" onAction="#onGenerateClick" text="Generate" />
+   <Label text="Password Generator" style="-fx-text-fill: #2a2a2a;">
+      <font>
+         <Font name="Arial Bold" size="22"/>
+      </font>
+   </Label>
 
-      <TextField fx:id="passwordField" editable="false" layoutX="216.0" layoutY="180.0" />
+   <TextField fx:id="usernameField"
+              promptText="Username / E-mail"
+              style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"/>
 
-      <Button layoutX="383.0" layoutY="180.0" mnemonicParsing="false" onAction="#onCopyClick" text="Copy" />
+   <HBox spacing="10">
+      <TextField fx:id="lengthField"
+                 promptText="Length"
+                 style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"
+                 prefWidth="80"/>
 
-      <TextField fx:id="lengthField" layoutX="158.0" layoutY="180.0" prefHeight="25.0" prefWidth="51.0" promptText="Length" />
+      <Button text="Generate"
+              onAction="#onGenerateClick"
+              style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+   </HBox>
 
-      <Button layoutX="513.0" layoutY="345.0" mnemonicParsing="false" onAction="#onSaveClick" text="Save" />
+   <HBox spacing="10">
+      <TextField fx:id="passwordField"
+                 editable="false"
+                 promptText="Generated Password"
+                 style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: #ffffff;"
+                 prefWidth="300"/>
 
-      <TextField fx:id="usernameField" layoutX="215.0" layoutY="148.0" promptText="Username / e-mail" />
-   </children>
-</AnchorPane>
+      <Button text="Copy"
+              onAction="#onCopyClick"
+              style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+   </HBox>
+
+   <Button text="Save"
+           onAction="#onSaveClick"
+           style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20;" />
+
+   <!-- New Button: View Passwords -->
+   <Button text="View Passwords"
+           onAction="#onPasswordsClick"
+           style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20;" />
+
+</VBox>

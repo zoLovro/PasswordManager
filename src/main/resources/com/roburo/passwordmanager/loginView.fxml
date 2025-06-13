@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="200" prefWidth="300" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.roburo.passwordmanager.LoginController">
+<VBox alignment="CENTER" spacing="15" prefWidth="350" prefHeight="300"
+      style="-fx-background-color: #f0f4f8; -fx-padding: 20;"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.roburo.passwordmanager.LoginController">
 
-    <TextField fx:id="usernameField" promptText="Username or Email" />
-    <PasswordField fx:id="passwordField" promptText="Master Password" />
-    <Button onAction="#onLoginClick" text="Login" />
-   <Button onAction="#onRegisterClick" text="Register" />
+    <Label text="Secure Login" style="-fx-text-fill: #2a2a2a;">
+        <font>
+            <Font name="Arial Bold" size="20"/>
+        </font>
+    </Label>
+
+    <TextField fx:id="usernameField" promptText="Username or Email"
+               style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"/>
+
+    <PasswordField fx:id="passwordField" promptText="Master Password"
+                   style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"/>
+
+    <Button text="Login"
+            onAction="#onLoginClick"
+            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+
+    <Button text="Register"
+            onAction="#onRegisterClick"
+            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+
 </VBox>

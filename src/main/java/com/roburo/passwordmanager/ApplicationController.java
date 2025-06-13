@@ -1,10 +1,15 @@
 package com.roburo.passwordmanager;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.stage.Stage;
+
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +21,7 @@ public class ApplicationController {
     private String currentUsername;
     private String encryptionKey;
 
-    private final PasswordManager passwordManager = new PasswordManager();
+    private final PasswordLogic passwordManager = new PasswordLogic();
 
     public void setUserCredentials(String username, String passwordHash) {
         this.currentUsername = username;
@@ -73,15 +78,31 @@ public class ApplicationController {
             showError("Error saving credentials: " + e.getMessage());
         }
     }
-
     private void showInfo(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
         alert.showAndWait();
     }
-
     private void showError(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR, msg);
         alert.showAndWait();
+    }
+
+    @FXML
+    protected void onPasswordsClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("passwordsView.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(new Scene(root));
+            stage.setTitle("Password Manager - Passwords");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

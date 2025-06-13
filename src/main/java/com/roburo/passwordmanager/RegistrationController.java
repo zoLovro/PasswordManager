@@ -2,6 +2,7 @@ package com.roburo.passwordmanager;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
@@ -40,6 +41,24 @@ public class RegistrationController {
             System.out.println("User registered.");
         }catch(IOException e) {
             System.out.println("Error writing user file: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void onBackToLoginClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("loginView.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(new Scene(root));
+            stage.setTitle("Password Manager - Login");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

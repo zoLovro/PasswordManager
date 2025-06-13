@@ -43,9 +43,11 @@ public class LoginController {
 
                 if (fileUser.equals(username) && fileHash.equals(hashedInput)) {
                     loadMainScreen(username, hashedInput);
+                    PasswordsController.Session.setEncryptionKey(password);
+                    PasswordsController.Session.setCurrentUsername(username);
+
                     return;
                 }
-
             }
             showAlert("Invalid credentials.");
         } catch (IOException e) {
@@ -64,7 +66,7 @@ public class LoginController {
 
             // Set the new scene
             stage.setScene(new Scene(root));
-            stage.setTitle("Register");
+            stage.setTitle("Password Manager - Register");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

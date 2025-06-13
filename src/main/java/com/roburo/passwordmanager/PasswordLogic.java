@@ -2,7 +2,7 @@ package com.roburo.passwordmanager;
 
 import java.security.SecureRandom;
 
-public class PasswordManager {
+public class PasswordLogic {
     // Generating the password
     private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
@@ -79,7 +79,7 @@ public class PasswordManager {
     }
 
     public static void main(String[] args) {
-        PasswordManager pm = new PasswordManager();
+        PasswordLogic pm = new PasswordLogic();
         System.out.println(pm.generatePassword(12));
     }
 }

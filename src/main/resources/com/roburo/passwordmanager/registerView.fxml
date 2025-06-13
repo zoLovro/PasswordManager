@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.roburo.passwordmanager.RegistrationController" prefWidth="300" prefHeight="200">
+<VBox alignment="CENTER" spacing="15" prefWidth="350" prefHeight="350"
+      style="-fx-background-color: #f0f4f8; -fx-padding: 20;"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.roburo.passwordmanager.RegistrationController">
 
-    <TextField fx:id="usernameField" promptText="Username or Email" />
-    <PasswordField fx:id="passwordField" promptText="Master Password" />
-    <Button text="Register" onAction="#onRegisterClick"/>
+    <Label text="Create Account" style="-fx-text-fill: #2a2a2a;">
+        <font>
+            <Font name="Arial Bold" size="20"/>
+        </font>
+    </Label>
+
+    <TextField fx:id="usernameField" promptText="Username or Email"
+               style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"/>
+
+    <PasswordField fx:id="passwordField" promptText="Master Password"
+                   style="-fx-background-radius: 8; -fx-padding: 10; -fx-background-color: white;"/>
+
+    <Button text="Register"
+            onAction="#onRegisterClick"
+            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+
+    <Button text="Back to Login"
+            onAction="#onBackToLoginClick"
+            style="-fx-background-color: transparent; -fx-text-fill: #555; -fx-underline: true; -fx-font-size: 12;" />
 </VBox>
