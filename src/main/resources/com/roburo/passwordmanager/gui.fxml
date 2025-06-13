@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:controller="com.roburo.passwordmanager.Controller"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="384.0" prefWidth="579.0">
+   <children>
+      <Button layoutX="257.0" layoutY="226.0" mnemonicParsing="false" text="Generate"
+              onAction="#onGenerateClick" />
+
+      <TextField fx:id="passwordField" layoutX="216.0" layoutY="180.0" editable="false" />
+
+      <Button layoutX="383.0" layoutY="180.0" mnemonicParsing="false" text="Copy"
+              onAction="#onCopyClick" />
+
+      <TextField fx:id="lengthField" layoutX="216.0" layoutY="140.0" promptText="Length" />
+
+      <Button layoutX="513.0" layoutY="345.0" mnemonicParsing="false" text="Save"
+              onAction="#onSaveClick" />
+   </children>
+</AnchorPane>
