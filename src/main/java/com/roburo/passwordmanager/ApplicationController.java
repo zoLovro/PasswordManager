@@ -10,9 +10,14 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.roburo.passwordmanager.LoginController.deriveAESKey;
 
 public class ApplicationController {
     @FXML private TextField usernameField;
@@ -23,9 +28,9 @@ public class ApplicationController {
 
     private final PasswordLogic passwordManager = new PasswordLogic();
 
-    public void setUserCredentials(String username, String passwordHash) {
+    public void setUserCredentials(String username, String rawPassword) {
         this.currentUsername = username;
-        this.encryptionKey = passwordHash.substring(0, 32); // 256-bit key from SHA-256 hash
+        this.encryptionKey = deriveAESKey(rawPassword);
     }
 
     @FXML
@@ -104,5 +109,17 @@ public class ApplicationController {
             e.printStackTrace();
         }
     }
+
+    private String deriveAESKey(String masterPassword) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(masterPassword.getBytes(StandardCharsets.UTF_8));
+            byte[] keyBytes = Arrays.copyOf(hash, 16);
+            return new String(keyBytes, StandardCharsets.ISO_8859_1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

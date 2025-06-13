@@ -9,12 +9,15 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
+import java.security.MessageDigest;
 
 public class LoginController {
     @FXML private TextField usernameField;
@@ -42,8 +45,8 @@ public class LoginController {
                 String fileHash = parts[1];
 
                 if (fileUser.equals(username) && fileHash.equals(hashedInput)) {
-                    loadMainScreen(username, hashedInput);
-                    PasswordsController.Session.setEncryptionKey(password);
+                    loadMainScreen(username, password); // pass raw password, NOT hashedInput
+                    PasswordsController.Session.setEncryptionKey(deriveAESKey(password));
                     PasswordsController.Session.setCurrentUsername(username);
 
                     return;
@@ -106,6 +109,19 @@ public class LoginController {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 not available", e);
+        }
+    }
+
+    public static String deriveAESKey(String masterPassword) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(masterPassword.getBytes(StandardCharsets.UTF_8));
+            // Convert first 16 bytes to a hex string (or use raw bytes in SecretKeySpec)
+            byte[] keyBytes = Arrays.copyOf(hash, 16);
+            return new String(keyBytes, StandardCharsets.ISO_8859_1); // Using ISO_8859_1 to keep bytes unchanged
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
