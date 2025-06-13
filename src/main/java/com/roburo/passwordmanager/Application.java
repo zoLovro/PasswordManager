@@ -9,9 +9,9 @@ import java.io.IOException;
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("gui.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("loginView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Password Manager");
+        stage.setTitle("Password Manager - Login");
         stage.setScene(scene);
         stage.show();
     }
