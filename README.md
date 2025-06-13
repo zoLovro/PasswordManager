@@ -37,7 +37,7 @@ A secure and easy-to-use password manager designed to help you store, organize, 
 
 ## Installation
 
-Download the latest release from [here](https://github.com/yourusername/yourrepo/releases/latest)
+Download the latest release from [here](https://github.com/zoLovro/PasswordManager/releases/tag/Release)
 
 ## Usage
 
