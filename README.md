@@ -14,7 +14,7 @@ A secure and easy-to-use password manager designed to help you store, organize, 
 
 ## Features
 
-- **Secure Storage:** Encrypts all stored passwords locally using industry-standard encryption algorithms and a login screen with a username and master password.
+- **Secure Storage:** Encrypts all stored passwords locally using industry-standard encryption algorithms (AES-128 in CBC mode with PKCS#5 padding, currently IV is still **hardcoded**) and a login screen with a username and master password.
 
 ![image(9)](https://github.com/user-attachments/assets/54a324f9-8c8b-4aab-97ce-1e7216f0362b)
 
