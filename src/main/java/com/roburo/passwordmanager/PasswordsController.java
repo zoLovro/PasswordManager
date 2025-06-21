@@ -34,14 +34,12 @@ public class PasswordsController {
 
         // 2. Add per-row “Copy” button
         actionColumn.setCellFactory(col -> new TableCell<>() {
-            private final Button copy = new Button("Copy");
+            private final Button copy = new Button("Copy Password");
             {
                 copy.setOnAction(evt -> {
                     Credential c = getTableView().getItems().get(getIndex());
                     ClipboardContent cc = new ClipboardContent();
-                    cc.putString("Site: " + c.getSite() +
-                            "\nUser: " + c.getUsername() +
-                            "\nPass: " + c.getPassword());
+                    cc.putString(c.getPassword());
                     Clipboard.getSystemClipboard().setContent(cc);
                 });
                 copy.setStyle("-fx-background-radius:8; -fx-padding:4 8;");
